@@ -5,6 +5,14 @@
   "manifest_version": 3,
   "action": {
     "default_popup": "helper.html",
-    "default_icon": "hello_extensions.png"
-  }
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "permissions": ["activeTab", "storage", "scripting"]
 }
