@@ -1,0 +1,10 @@
+{
+  "name": "Enreach Helper Extension",
+  "description": "Extension to help copy/paste in Enreach Outbound",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "helper.html",
+    "default_icon": "hello_extensions.png"
+  }
+}
