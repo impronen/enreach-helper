@@ -13,7 +13,7 @@ When creating a new lead to a campaign (for example when directed to anothe cont
 
 1. **Download the Extension**
 
-   - Download the `enreach-helper.crx` file from the [releases page](https://github.com/impronen/enreach-helper/releases).
+   - Download the `enreach-helper.crx` file from the Git repository.
 
 2. **Load the Extension in Chrome**
 
