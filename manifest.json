@@ -4,15 +4,26 @@
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "helper.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
-    }
+    "default_popup": "helper.html"
   },
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "permissions": ["activeTab", "storage", "scripting"]
+  "commands": {
+    "run-copy": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A"
+      },
+      "description": "Run \"copy\" on the current page."
+    },
+    "run-paste": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Run \"paste\" on the current page."
+    }
+  },
+  "permissions": ["activeTab", "storage", "scripting", "contextMenus"]
 }
