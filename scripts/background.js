@@ -110,6 +110,9 @@ function dataPaster(inputValues) {
         const labelText = label.textContent.trim();
         if (inputValues.hasOwnProperty(labelText)) {
           input.value = inputValues[labelText];
+          //Simulation of user input events
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          input.dispatchEvent(new Event("change", { bubbles: true }));
         }
       }
     });
