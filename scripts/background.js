@@ -1,4 +1,4 @@
-const menuItems = ["Copy from Enreach", "Paste from Enreach"];
+const menuItems = ["Copy LEAD data", "Paste LEAD data"];
 
 // Create context menu items
 chrome.runtime.onInstalled.addListener(() => {
@@ -18,9 +18,9 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // Context menu listener
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "Copy from Enreach") {
+  if (info.menuItemId === "Copy LEAD data") {
     handleCopyCommand(tab);
-  } else if (info.menuItemId === "Paste from Enreach") {
+  } else if (info.menuItemId === "Paste LEAD data") {
     handlePasteCommand(tab);
   }
 });
@@ -49,6 +49,8 @@ function handleCopyCommand(tab) {
         chrome.storage.local.set({ copiedData: copiedData }, () => {
           console.log("Data copied and stored:", copiedData);
         });
+      } else {
+        console.log("No data returned from dataCopier.");
       }
     }
   );
@@ -64,15 +66,15 @@ function handlePasteCommand(tab) {
         function: dataPaster,
         args: [inputValues],
       });
+    } else {
+      console.log("No data found in storage to paste.");
     }
   });
 }
 
 // Actual copying
 function dataCopier() {
-  console.log("Running Copy!");
   const data = document.querySelectorAll(".ydum_");
-
   const inputValues = {};
 
   data.forEach((element) => {
@@ -90,31 +92,64 @@ function dataCopier() {
     });
   });
 
+  // Find the "Muistiinpanot" section
+  const secondContainer = document.querySelector(
+    ".WZyIH.ComponentContainer:nth-child(2)"
+  );
+  if (secondContainer) {
+    const childElements = secondContainer.querySelectorAll("div.TS05F");
+    childElements.forEach((child) => {
+      const label = child.querySelector("label.YfDOn");
+      if (label && label.textContent.trim() === "Muistiinpanot") {
+        const textarea = child.querySelector("textarea");
+        if (textarea) {
+          const textareaValue = textarea.value.trim();
+          inputValues["Muistiinpanot"] = textareaValue;
+        }
+      }
+    });
+  }
+
   return inputValues;
 }
 
 // Actual paste
 function dataPaster(inputValues) {
-  console.log(inputValues);
+  console.log("Pasting values:", inputValues);
 
   const data = document.querySelectorAll(".ydum_");
-
   data.forEach((element) => {
     const childDivs = element.querySelectorAll("div");
-
     childDivs.forEach((child) => {
       const label = child.querySelector("label");
       const input = child.querySelector('input[type="text"]');
-
       if (label && input) {
         const labelText = label.textContent.trim();
         if (inputValues.hasOwnProperty(labelText)) {
           input.value = inputValues[labelText];
-          //Simulation of user input events
           input.dispatchEvent(new Event("input", { bubbles: true }));
           input.dispatchEvent(new Event("change", { bubbles: true }));
         }
       }
     });
   });
+
+  // Paste "Muistiinpanot" (needed cause Enreach HTML is a mess)
+  const secondContainer = document.querySelector(
+    ".WZyIH.ComponentContainer:nth-child(2)"
+  );
+  if (secondContainer) {
+    const childElements = secondContainer.querySelectorAll("div.TS05F");
+    childElements.forEach((child) => {
+      const label = child.querySelector("label.YfDOn");
+      if (label && label.textContent.trim() === "Muistiinpanot") {
+        const textarea = child.querySelector("textarea");
+        if (textarea && inputValues.hasOwnProperty("Muistiinpanot")) {
+          textarea.value = inputValues["Muistiinpanot"];
+          textarea.dispatchEvent(new Event("input", { bubbles: true }));
+          textarea.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+    });
+  }
 }
