@@ -22,6 +22,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     handleCopyCommand(tab);
   } else if (info.menuItemId === "Paste LEAD data") {
     handlePasteCommand(tab);
+  } else if (info.menuItemId === "Copy to Clipboard") {
+    handleCopyToClipboard(tab);
   }
 });
 
