@@ -1,4 +1,4 @@
-const menuItems = ["Copy LEAD data", "Paste LEAD data"];
+const menuItems = ["Copy LEAD data", "Paste LEAD data", "Copy to Clipboard"];
 
 // Create context menu items
 chrome.runtime.onInstalled.addListener(() => {
@@ -58,7 +58,6 @@ function handleCopyCommand(tab) {
   );
 }
 
-// this function will copy the content AND push it formatted to clipboard
 function handleCopyToClipboard(tab) {
   chrome.scripting.executeScript(
     {
@@ -68,26 +67,33 @@ function handleCopyToClipboard(tab) {
     (results) => {
       if (results && results.length > 0) {
         const resultData = results[0].result;
-        const formattedText = `Uusi tapaaminen:\n
-        ${resultData.Yritys}\n
-        ${resultData.Titteli}\n
-        ${resultData.Etunimi} ${resultData.Sukunimi}\n
-        ${resultData.Matkapuhelinnumero} ${resultData.Sähköpostiosoite}\n\n
-        ${resultData.Muistiinpanot}`;
 
-        navigator.clipboard
-          .writeText(formattedText)
-          .then(() => {
-            console.log("Text copied to clipboard");
-          })
-          .catch((err) => {
-            console.error("Could not copy text: ", err);
-          });
+        // Format the text
+        const formattedText = `Uusi tapaaminen:\n
+${resultData.Yritys}\n
+${resultData.Titteli}\n
+${resultData.Etunimi} ${resultData.Sukunimi}\n
+${resultData.Matkapuhelinnumero} ${resultData.Sähköpostiosoite}\n\n
+${resultData.Muistiinpanot}`;
+
+        // Send data to the content script for clipboard copy
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          function: copyToClipboard,
+          args: [formattedText],
+        });
       } else {
         console.log("Something's wrong here...");
       }
     }
   );
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => console.log("Text successfully copied to clipboard!"))
+    .catch((err) => console.error("Failed to copy text:", err));
 }
 
 // Extension side paste
