@@ -71,10 +71,14 @@ function handleCopyToClipboard(tab) {
         // Format the text
         const formattedText = `
 Uusi tapaaminen:
+
 Yritys: ${resultData.Yritys}
 Titteli: ${resultData.Titteli}
 Nimi: ${resultData.Etunimi} ${resultData.Sukunimi}
 Yhteystiedot: ${resultData.Matkapuhelinnumero} / ${resultData.Sähköpostiosoite}
+
+Lähtötiedot: 
+
 ${resultData.Muistiinpanot}
 `.trim();
 
