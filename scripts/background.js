@@ -69,12 +69,14 @@ function handleCopyToClipboard(tab) {
         const resultData = results[0].result;
 
         // Format the text
-        const formattedText = `Uusi tapaaminen:\n
-${resultData.Yritys}\n
-${resultData.Titteli}\n
-${resultData.Etunimi} ${resultData.Sukunimi}\n
-${resultData.Matkapuhelinnumero} ${resultData.Sähköpostiosoite}\n\n
-${resultData.Muistiinpanot}`;
+        const formattedText = `
+Uusi tapaaminen:
+Yritys: ${resultData.Yritys}
+Titteli: ${resultData.Titteli}
+Nimi: ${resultData.Etunimi} ${resultData.Sukunimi}
+Yhteystiedot: ${resultData.Matkapuhelinnumero} / ${resultData.Sähköpostiosoite}
+${resultData.Muistiinpanot}
+`.trim();
 
         // Send data to the content script for clipboard copy
         chrome.scripting.executeScript({
